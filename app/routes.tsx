@@ -8,6 +8,7 @@ import { useGameStore } from '../src/store/useGameStore';
 import { RouteProgressBar } from '../src/components/RouteProgressBar';
 import { PrimaryButton } from '../src/components/PrimaryButton';
 import { formatCurrency } from '../src/utils/formatting';
+import { calculateDistanceKm, canOperateRoute, estimateRevenue } from '../src/utils/economy';
 
 const sheetSnapPoints = ['55%'];
 
@@ -26,13 +27,22 @@ export default function RoutesScreen() {
   );
 
   const ownedAirports = airports.filter((airport) => airport.status === 'OWNED');
-  const availableAirports = airports.filter((airport) => airport.status === 'AVAILABLE');
+  const routeAirports = airports.filter((airport) => airport.status !== 'LOCKED');
   const idlePlanes = aircraft.filter((plane) => plane.status === 'IDLE');
 
   const [departure, setDeparture] = useState(ownedAirports[0]?.iata ?? 'NZAA');
-  const [arrival, setArrival] = useState(availableAirports[0]?.iata ?? 'YSSY');
+  const [arrival, setArrival] = useState(routeAirports.find((airport) => airport.iata !== (ownedAirports[0]?.iata ?? 'NZAA'))?.iata ?? 'YSSY');
   const [selectedAircraft, setSelectedAircraft] = useState(idlePlanes[0]?.id ?? '');
   const [stage, setStage] = useState(1);
+
+  const selectedDepartureAirport = airports.find((airport) => airport.iata === departure);
+  const selectedArrivalAirport = airports.find((airport) => airport.iata === arrival);
+  const selectedPlane = aircraft.find((plane) => plane.id === selectedAircraft);
+  const routeDistance = selectedDepartureAirport && selectedArrivalAirport ? calculateDistanceKm(selectedDepartureAirport, selectedArrivalAirport) : 0;
+  const projectedRevenue = selectedDepartureAirport && selectedArrivalAirport && selectedPlane
+    ? estimateRevenue(selectedDepartureAirport, selectedArrivalAirport, selectedPlane)
+    : 0;
+  const canLaunch = selectedPlane && selectedDepartureAirport && selectedArrivalAirport && canOperateRoute(selectedPlane, routeDistance) && departure !== arrival;
 
   const openSheet = () => {
     setStage(1);
@@ -40,7 +50,7 @@ export default function RoutesScreen() {
   };
 
   const handleLaunch = async () => {
-    if (!selectedAircraft || !departure || !arrival) return;
+    if (!selectedAircraft || !departure || !arrival || !canLaunch) return;
     createRoute(departure, arrival, selectedAircraft);
     bottomSheetRef.current?.dismiss();
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -120,7 +130,7 @@ export default function RoutesScreen() {
           {stage === 2 && (
             <View>
               <Text style={styles.sheetSection}>Arrival</Text>
-              {availableAirports.map((airport) => (
+              {routeAirports.filter((airport) => airport.iata !== departure).map((airport) => (
                 <Pressable key={airport.id} style={[styles.optionRow, arrival === airport.iata && styles.optionRowActive]} onPress={() => setArrival(airport.iata)}>
                   <Text style={styles.optionTitle}>{airport.iata} · {airport.city}</Text>
                   <Text style={styles.optionSubtitle}>{airport.flag} {airport.country}</Text>
@@ -133,14 +143,32 @@ export default function RoutesScreen() {
             <View>
               <Text style={styles.sheetSection}>Aircraft</Text>
               {idlePlanes.length === 0 ? (
-                <Text style={styles.emptyText}>No idle aircraft available. Buy or unassign one first.</Text>
-              ) : idlePlanes.map((plane) => (
-                <Pressable key={plane.id} style={[styles.optionRow, selectedAircraft === plane.id && styles.optionRowActive]} onPress={() => setSelectedAircraft(plane.id)}>
-                  <Text style={styles.optionTitle}>{plane.tail} · {plane.name}</Text>
-                  <Text style={styles.optionSubtitle}>Seats {plane.seats} · Range {plane.range}km</Text>
-                </Pressable>
-              ))}
-              <PrimaryButton label="Launch Route" onPress={handleLaunch} />
+                <Text style={styles.emptyText}>No idle aircraft available. Buy or assign one first.</Text>
+              ) : idlePlanes.map((plane) => {
+                const valid = routeDistance ? canOperateRoute(plane, routeDistance) : true;
+                return (
+                  <Pressable
+                    key={plane.id}
+                    style={[styles.optionRow, selectedAircraft === plane.id && styles.optionRowActive, !valid && styles.optionRowDisabled]}
+                    onPress={() => valid && setSelectedAircraft(plane.id)}
+                  >
+                    <Text style={styles.optionTitle}>{plane.tail} · {plane.name}</Text>
+                    <Text style={styles.optionSubtitle}>Seats {plane.seats} · Range {plane.range}km</Text>
+                    <Text style={[styles.optionSubtitle, !valid && styles.unavailableText]}>
+                      {valid ? `Good for ${routeDistance}km` : `Too short for ${routeDistance}km`}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+              <View style={styles.summaryBlock}>
+                <Text style={styles.summaryLabel}>Route distance</Text>
+                <Text style={styles.summaryValue}>{routeDistance} km</Text>
+              </View>
+              <View style={styles.summaryBlock}>
+                <Text style={styles.summaryLabel}>Projected revenue</Text>
+                <Text style={styles.summaryValue}>{formatCurrency(projectedRevenue)}</Text>
+              </View>
+              <PrimaryButton label={canLaunch ? 'Launch Route' : 'Choose a valid aircraft'} onPress={handleLaunch} disabled={!canLaunch} />
             </View>
           )}
         </View>
@@ -295,6 +323,9 @@ const styles = StyleSheet.create({
     borderColor: '#3B82F6',
     borderWidth: 1,
   },
+  optionRowDisabled: {
+    opacity: 0.5,
+  },
   optionTitle: {
     color: '#F8FAFC',
     fontWeight: '700',
@@ -302,5 +333,25 @@ const styles = StyleSheet.create({
   },
   optionSubtitle: {
     color: '#94A3B8',
+  },
+  unavailableText: {
+    color: '#EF4444',
+  },
+  summaryBlock: {
+    backgroundColor: '#111827',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 12,
+  },
+  summaryLabel: {
+    color: '#9CA3AF',
+    marginBottom: 6,
+    fontSize: 13,
+    textTransform: 'uppercase',
+  },
+  summaryValue: {
+    color: '#F8FAFC',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });

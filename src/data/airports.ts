@@ -9,6 +9,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇳🇿',
     tier: 'Hub',
     monthlyCost: 250000,
+    latitude: -37.0082,
+    longitude: 174.7850,
     status: 'OWNED',
   },
   {
@@ -19,6 +21,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇳🇿',
     tier: 'International',
     monthlyCost: 120000,
+    latitude: -41.3272,
+    longitude: 174.8049,
     status: 'AVAILABLE',
   },
   {
@@ -29,6 +33,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇳🇿',
     tier: 'International',
     monthlyCost: 110000,
+    latitude: -43.4888,
+    longitude: 172.5328,
     status: 'AVAILABLE',
   },
   {
@@ -39,6 +45,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇳🇿',
     tier: 'Domestic',
     monthlyCost: 70000,
+    latitude: -44.8848,
+    longitude: 169.9566,
     status: 'AVAILABLE',
   },
   {
@@ -49,6 +57,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇳🇿',
     tier: 'Domestic',
     monthlyCost: 65000,
+    latitude: -45.9287,
+    longitude: 170.1960,
     status: 'AVAILABLE',
   },
   {
@@ -59,6 +69,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'Hub',
     monthlyCost: 280000,
+    latitude: -33.9399,
+    longitude: 151.1753,
     status: 'AVAILABLE',
   },
   {
@@ -69,6 +81,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'Hub',
     monthlyCost: 260000,
+    latitude: -37.6690,
+    longitude: 144.8410,
     status: 'AVAILABLE',
   },
   {
@@ -79,6 +93,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'International',
     monthlyCost: 180000,
+    latitude: -27.3842,
+    longitude: 153.1175,
     status: 'AVAILABLE',
   },
   {
@@ -89,6 +105,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'International',
     monthlyCost: 170000,
+    latitude: -31.9368,
+    longitude: 115.9670,
     status: 'AVAILABLE',
   },
   {
@@ -99,6 +117,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'Domestic',
     monthlyCost: 95000,
+    latitude: -34.9439,
+    longitude: 138.5310,
     status: 'AVAILABLE',
   },
   {
@@ -109,6 +129,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'Domestic',
     monthlyCost: 85000,
+    latitude: -16.8858,
+    longitude: 145.7559,
     status: 'AVAILABLE',
   },
   {
@@ -119,6 +141,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'Domestic',
     monthlyCost: 78000,
+    latitude: -12.4083,
+    longitude: 130.8760,
     status: 'AVAILABLE',
   },
   {
@@ -129,6 +153,8 @@ export const initialAirportList: Airport[] = [
     flag: '🇦🇺',
     tier: 'Domestic',
     monthlyCost: 76000,
+    latitude: -28.1658,
+    longitude: 153.5059,
     status: 'AVAILABLE',
   },
 ];

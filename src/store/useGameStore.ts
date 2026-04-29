@@ -6,6 +6,7 @@ import { initialAirportList } from '../data/airports';
 import { initialCountries } from '../data/countries';
 import type { Aircraft, Airport, Country, FeedEntry, GameState, Prestige, Route } from '../types';
 import { formatCurrency } from '../utils/formatting';
+import { calculateDistanceKm, estimateRevenue, getCycleSeconds } from '../utils/economy';
 
 const initialPrestige: Prestige = {
   level: 1,
@@ -123,9 +124,11 @@ export const useGameStore = create<GameState>()(
       createRoute: (departure: string, arrival: string, aircraftId: string) => {
         const state = get();
         const plane = state.aircraft.find((item) => item.id === aircraftId);
-        if (!plane) return;
-        const distance = departure === 'NZAA' && arrival === 'YSSY' ? 2182 : 1600;
-        const routeId = `route-${departure.toLowerCase()}-${arrival.toLowerCase()}`;
+        const departureAirport = state.airports.find((item) => item.iata === departure);
+        const arrivalAirport = state.airports.find((item) => item.iata === arrival);
+        if (!plane || !departureAirport || !arrivalAirport) return;
+        const distance = calculateDistanceKm(departureAirport, arrivalAirport);
+        const routeId = `route-${Date.now()}`;
         const newRoute: Route = {
           id: routeId,
           departure,
@@ -133,8 +136,8 @@ export const useGameStore = create<GameState>()(
           aircraftId,
           distance,
           progress: 0,
-          cycleSeconds: Math.max(90, Math.round(distance / 18)),
-          revenuePerFlight: Math.round(distance * plane.seats * 1.4),
+          cycleSeconds: getCycleSeconds(distance),
+          revenuePerFlight: estimateRevenue(departureAirport, arrivalAirport, plane, state.prestige.level),
           flightsCompleted: 0,
           loadFactor: 0.7,
           status: 'ACTIVE',

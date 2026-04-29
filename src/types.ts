@@ -27,6 +27,8 @@ export interface Airport {
   flag: string;
   tier: AirportTier;
   monthlyCost: number;
+  latitude: number;
+  longitude: number;
   status: AirportStatus;
 }
 
