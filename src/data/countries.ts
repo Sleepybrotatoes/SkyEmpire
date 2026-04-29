@@ -1,0 +1,58 @@
+import type { Country } from '../types';
+
+export const initialCountries: Country[] = [
+  {
+    id: 'NZ',
+    name: 'New Zealand',
+    emoji: '🇳🇿',
+    status: 'ACTIVE',
+    unlockCost: 0,
+    airports: 5,
+    projectedRevenue: 360000,
+  },
+  {
+    id: 'AU',
+    name: 'Australia',
+    emoji: '🇦🇺',
+    status: 'LOCKED',
+    unlockCost: 500000,
+    airports: 8,
+    projectedRevenue: 420000,
+  },
+  {
+    id: 'FJ',
+    name: 'Fiji',
+    emoji: '🇫🇯',
+    status: 'LOCKED',
+    unlockCost: 200000,
+    airports: 3,
+    projectedRevenue: 180000,
+  },
+  {
+    id: 'PG',
+    name: 'Papua New Guinea',
+    emoji: '🇵🇬',
+    status: 'LOCKED',
+    unlockCost: 150000,
+    airports: 4,
+    projectedRevenue: 140000,
+  },
+  {
+    id: 'TO',
+    name: 'Tonga',
+    emoji: '🇹🇴',
+    status: 'LOCKED',
+    unlockCost: 100000,
+    airports: 2,
+    projectedRevenue: 90000,
+  },
+  {
+    id: 'VU',
+    name: 'Vanuatu',
+    emoji: '🇻🇺',
+    status: 'LOCKED',
+    unlockCost: 120000,
+    airports: 2,
+    projectedRevenue: 95000,
+  },
+];
