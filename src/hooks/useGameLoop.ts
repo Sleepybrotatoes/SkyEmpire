@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { AppState } from 'react-native';
+import { AppState, AppStateStatus } from 'react-native';
 import { useGameStore } from '../store/useGameStore';
 
 const TICK_INTERVAL_MS = 5000;
@@ -17,7 +17,7 @@ export function useGameLoop() {
   }, [advanceGameTick]);
 
   useEffect(() => {
-    const handleStateChange = (status: string) => {
+    const handleStateChange = (status: AppStateStatus) => {
       if (status === 'active') {
         const now = Date.now();
         const offlineSeconds = Math.min((now - lastBackground.current) / 1000, MAX_OFFLINE_SECONDS);

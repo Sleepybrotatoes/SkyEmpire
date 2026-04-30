@@ -25,7 +25,10 @@ export default function MapScreen() {
   }, [pulse]);
 
   const selected = countries.find((country) => country.id === selectedCountryId) ?? countries[0];
-  const ownedAirportCount = airports.filter((airport) => airport.country === selected?.name && airport.status === 'OWNED').length;
+  const countryAirports = airports.filter((airport) => airport.country === selected?.name);
+  const ownedAirportCount = countryAirports.filter((airport) => airport.status === 'OWNED').length;
+  const availableAirportCount = countryAirports.filter((airport) => airport.status === 'AVAILABLE').length;
+  const lockedAirportCount = countryAirports.filter((airport) => airport.status === 'LOCKED').length;
   const pulseProps = useAnimatedProps(() => ({
     r: 16 * pulse.value,
     opacity: 0.25 * (2 - pulse.value),
@@ -108,6 +111,11 @@ export default function MapScreen() {
               <Text style={styles.statValue}>{selected?.projectedRevenue ? formatCurrency(selected.projectedRevenue) : '-'}</Text>
             </View>
           </View>
+          <View style={styles.airportStats}>
+            <Text style={styles.airportStat}>{availableAirportCount} available</Text>
+            <Text style={styles.airportStat}>{lockedAirportCount} locked</Text>
+            <Text style={styles.airportStat}>{ownedAirportCount} owned</Text>
+          </View>
           <Text style={styles.statusTag}>Status: {activeStatus}</Text>
           {selected?.status === 'LOCKED' ? (
             <Pressable style={styles.unlockButton} onPress={handleUnlock}>
@@ -180,6 +188,16 @@ const styles = StyleSheet.create({
   sheetStatBlock: {
     flex: 1,
     marginRight: 12,
+  },
+  airportStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  airportStat: {
+    color: '#CAD5E0',
+    fontSize: 12,
+    fontWeight: '700',
   },
   statLabel: {
     color: '#9CA3AF',

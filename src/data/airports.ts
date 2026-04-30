@@ -71,7 +71,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 280000,
     latitude: -33.9399,
     longitude: 151.1753,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YMML',
@@ -83,7 +83,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 260000,
     latitude: -37.6690,
     longitude: 144.8410,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YBBN',
@@ -95,7 +95,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 180000,
     latitude: -27.3842,
     longitude: 153.1175,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YPPH',
@@ -107,7 +107,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 170000,
     latitude: -31.9368,
     longitude: 115.9670,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YPAD',
@@ -119,7 +119,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 95000,
     latitude: -34.9439,
     longitude: 138.5310,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YBCS',
@@ -131,7 +131,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 85000,
     latitude: -16.8858,
     longitude: 145.7559,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YPDN',
@@ -143,7 +143,7 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 78000,
     latitude: -12.4083,
     longitude: 130.8760,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
   {
     id: 'YBCG',
@@ -155,6 +155,6 @@ export const initialAirportList: Airport[] = [
     monthlyCost: 76000,
     latitude: -28.1658,
     longitude: 153.5059,
-    status: 'AVAILABLE',
+    status: 'LOCKED',
   },
 ];

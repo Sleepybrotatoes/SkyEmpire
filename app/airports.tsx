@@ -52,6 +52,7 @@ export default function AirportsScreen() {
       </View>
       <Text style={styles.city}>{item.city} · {item.flag}</Text>
       <Text style={styles.detail}>Tier {item.tier}</Text>
+      <Text style={styles.detail}>Coordinates {item.latitude.toFixed(2)}, {item.longitude.toFixed(2)}</Text>
       <Text style={styles.detail}>Monthly slot cost {formatCurrency(item.monthlyCost)}</Text>
     </Pressable>
   );
@@ -100,11 +101,16 @@ export default function AirportsScreen() {
               <Text style={styles.sheetValue}>{formatCurrency(selectedAirportData.monthlyCost)}</Text>
               <Text style={styles.sheetLabel}>Status</Text>
               <Text style={styles.sheetValue}>{selectedAirportData.status}</Text>
+              <Text style={[styles.sheetNote, selectedAirportData.status === 'LOCKED' && styles.alertText]}>
+                {selectedAirportData.status === 'LOCKED'
+                  ? 'Unlock the country first to open this slot.'
+                  : selectedAirportData.status === 'OWNED'
+                  ? 'This airport is already in your network.'
+                  : 'Purchase this slot to base flights here.'}
+              </Text>
               {selectedAirportData.status === 'AVAILABLE' ? (
                 <PrimaryButton label={`Purchase Slot — ${formatCurrency(selectedAirportData.monthlyCost)}`} onPress={handlePurchase} />
-              ) : (
-                <Text style={styles.sheetNote}>Owned airports show route performance in the next update.</Text>
-              )}
+              ) : null}
             </>
           ) : null}
         </View>
@@ -255,6 +261,10 @@ const styles = StyleSheet.create({
   },
   sheetNote: {
     color: '#94A3B8',
+    marginTop: 18,
+  },
+  alertText: {
+    color: '#F87171',
     marginTop: 18,
   },
 });

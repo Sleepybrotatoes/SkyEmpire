@@ -1,17 +1,17 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { Pressable, Text, StyleSheet, ViewStyle, TextStyle, PressableStateCallbackType, StyleProp } from 'react-native';
 
 interface PrimaryButtonProps {
   label: string;
   onPress: () => void;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function PrimaryButton({ label, onPress, disabled, style }: PrimaryButtonProps) {
   return (
     <Pressable
-      style={({ pressed }) => [
+      style={({ pressed }: PressableStateCallbackType) => [
         styles.button,
         style,
         disabled && styles.disabled,

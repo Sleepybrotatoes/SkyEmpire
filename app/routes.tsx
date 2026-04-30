@@ -56,6 +56,21 @@ export default function RoutesScreen() {
     await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
+  React.useEffect(() => {
+    if (selectedAircraft && selectedPlane && !canOperateRoute(selectedPlane, routeDistance)) {
+      setSelectedAircraft('');
+    }
+  }, [departure, arrival, routeDistance, selectedPlane, selectedAircraft]);
+
+  React.useEffect(() => {
+    if (departure && !ownedAirports.some((airport) => airport.iata === departure)) {
+      setDeparture(ownedAirports[0]?.iata ?? '');
+    }
+    if (arrival && !routeAirports.some((airport) => airport.iata === arrival)) {
+      setArrival(routeAirports.find((airport) => airport.iata !== departure)?.iata ?? '');
+    }
+  }, [departure, arrival, ownedAirports, routeAirports]);
+
   const renderRoute = ({ item }: { item: typeof routes[number] }) => {
     const assignedPlane = aircraft.find((plane) => plane.id === item.aircraftId);
     return (
@@ -136,7 +151,15 @@ export default function RoutesScreen() {
                   <Text style={styles.optionSubtitle}>{airport.flag} {airport.country}</Text>
                 </Pressable>
               ))}
-              <PrimaryButton label="Next: Aircraft" onPress={() => setStage(3)} />
+              {selectedDepartureAirport && selectedArrivalAirport ? (
+                <View style={styles.summaryBlock}>
+                  <Text style={styles.summaryLabel}>Distance</Text>
+                  <Text style={styles.summaryValue}>{routeDistance} km</Text>
+                  <Text style={styles.summaryLabel}>Estimated revenue</Text>
+                  <Text style={styles.summaryValue}>{formatCurrency(projectedRevenue)}</Text>
+                </View>
+              ) : null}
+              <PrimaryButton label="Next: Aircraft" onPress={() => setStage(3)} disabled={!arrival || departure === arrival} />
             </View>
           )}
           {stage === 3 && (
