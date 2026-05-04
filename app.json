@@ -25,6 +25,9 @@
         "backgroundColor": "#0A0F1E"
       },
       "package": "com.anonymous.skyempire"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
